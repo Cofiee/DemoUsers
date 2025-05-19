@@ -26,7 +26,7 @@ namespace DemoUsers.Server.Users
             _mediator = mediator;
         }
 
-        [HttpGet(Name = "GetUsers")]
+        [HttpGet]
         public async Task<IActionResult> Get()
         {
             var users = await _mediator.Send(new GetUsersQuery());

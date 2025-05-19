@@ -1,10 +1,14 @@
 import { useEffect, useState } from 'react';
 import './App.css';
+import UserList from './UserList';
+import UserDetail from './UserDetail';
+import UserCreate from './UserCreate';
 
 function App() {
     const [users, setUsers] = useState();
     const [selectedUser, setSelectedUser] = useState(null);
     const [loading, setLoading] = useState(true);
+    const [showCreate, setShowCreate] = useState(false);
 
     useEffect(() => {
         populateUsers();
@@ -13,34 +17,17 @@ function App() {
     const contents = users === undefined
         ? <p><em>Loading... Please refresh once the ASP.NET backend has started. See <a href="https://aka.ms/jspsintegrationreact">https://aka.ms/jspsintegrationreact</a> for more details.</em></p>
         : <div className="container">
-            {!selectedUser ? (
-                <>
-                    <h2>User List</h2>
-                        <ul>
-                            {users.map(user => (
-                                <li key={user.id}>
-                                    <button onClick={() => handleUserClick(user.id)} style={{ background: 'none', border: 'none', color: 'blue', textDecoration: 'underline', cursor: 'pointer' }}>
-                                        {user.name}
-                                    </button>
-                                </li>
-                            ))}
-                        </ul>
-                    </>
-                ) : (
-                    <div>
-                        <button onClick={handleBack}>&larr; Back to list</button>
-                        <h2>User Detail</h2>
-                        <p><b>Name:</b> {selectedUser.name}</p>
-                        <p><b>Email:</b> {selectedUser.email}</p>
-                        {selectedUser.image && (
-                            <p>
-                                <b>Image:</b><br />
-                                <img src={selectedUser.image} alt="User" style={{ width: 100, height: 100, objectFit: 'cover', borderRadius: '50%' }} />
-                            </p>
-                        )}
-                    </div>
-                )}
-                <style>{`
+            {showCreate ? (
+                <UserCreate
+                    onUserCreated={handleUserCreated}
+                    onCancel={() => setShowCreate(false)}
+                />
+            ) : !selectedUser ? (
+                <UserList users={users} onUserClick={handleUserClick} />
+            ) : (
+                <UserDetail user={selectedUser} onBack={handleBack} />
+            )}
+            <style>{`
                 .container {
                     max-width: 600px;
                     margin: 2em auto;
@@ -58,20 +45,34 @@ function App() {
 
     return (
         <div>
-            <h1 id="tableLabel">Weather forecast</h1>
-            <p>This component demonstrates fetching data from the server.</p>
-            {contents}
+            <div className="navbar navbar-expand-lg fixed-top" style={{ backgroundColor: '#6f42c1', color: 'white' }}>
+                <div className="container-fluid">
+                    <span className="navbar-brand mb-0 h1" style={{ color: 'white' }}>Demo Users</span>
+                    <div className="ms-auto">
+                        <button
+                            className="btn btn-light"
+                            style={{ color: '#6f42c1', fontWeight: 'bold' }}
+                            onClick={() => setShowCreate(true)}
+                        >
+                            Add New User
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div style={{ paddingTop: '70px' }}>
+                {contents}
+            </div>
         </div>
     );
 
     async function populateUsers() {
-        //setLoading(true);
+        setLoading(true);
         const res = await fetch('users');
         if (res.ok) {
             const data = await res.json();
             setUsers(data);
         }
-        //setLoading(false);
+        setLoading(false);
     }
 
     async function fetchUserDetail(id) {
@@ -89,6 +90,11 @@ function App() {
 
     function handleBack() {
         setSelectedUser(null);
+    }
+
+    function handleUserCreated() {
+        setShowCreate(false);
+        populateUsers()
     }
 }
 

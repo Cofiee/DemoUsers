@@ -23,7 +23,8 @@ namespace DemoUsers.Server.Users
             dbContext.Database.EnsureCreated();
             if (!dbContext.Users.Any())
             {
-                dbContext.Users.Add(new UserEntity { Name = "John Doe", Email = "aaa@aa.pl" });
+                dbContext.Users.Add(new UserEntity { Name = "John Doe", Email = "aaa@aa.pl", Image = new Uri("https://png.pngtree.com/png-vector/20191121/ourmid/pngtree-blue-bird-vector-or-color-illustration-png-image_2013004.jpg") });
+                dbContext.Users.Add(new UserEntity { Name = "Josh Doe", Email = "bbbb@aa.pl" });
                 dbContext.SaveChanges();
             }
         }
