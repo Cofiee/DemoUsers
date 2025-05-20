@@ -7,7 +7,6 @@ import UserCreate from './UserCreate';
 function App() {
     const [users, setUsers] = useState();
     const [selectedUser, setSelectedUser] = useState(null);
-    const [loading, setLoading] = useState(true);
     const [showCreate, setShowCreate] = useState(false);
 
     useEffect(() => {
@@ -23,7 +22,7 @@ function App() {
                     onCancel={() => setShowCreate(false)}
                 />
             ) : !selectedUser ? (
-                <UserList users={users} onUserClick={handleUserClick} />
+                <UserList users={users} onUserClick={handleUserClick} onUserDeleted={populateUsers}/>
             ) : (
                 <UserDetail user={selectedUser} onBack={handleBack} />
             )}
@@ -66,22 +65,18 @@ function App() {
     );
 
     async function populateUsers() {
-        setLoading(true);
         const res = await fetch('users');
         if (res.ok) {
             const data = await res.json();
             setUsers(data);
         }
-        setLoading(false);
     }
 
     async function fetchUserDetail(id) {
-        setLoading(true);
         const res = await fetch(`users/${id}`);
         if (res.ok) {
             setSelectedUser(await res.json());
         }
-        setLoading(false);
     }
 
     function handleUserClick(id) {

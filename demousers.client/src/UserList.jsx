@@ -1,5 +1,6 @@
 import { useState } from 'react';
-export default function UserList({ users, onUserClick }) {
+
+export default function UserList({ users, onUserClick, onUserDeleted }) {
     const [modalOpen, setModalOpen] = useState(false);
     const [selectedUser, setSelectedUser] = useState(null);
 
@@ -13,11 +14,15 @@ export default function UserList({ users, onUserClick }) {
         setSelectedUser(null);
     };
 
-    const handleDelete = () => {
+    const handleDelete = async (id) => {
         if (selectedUser) {
-            onDeleteUser(selectedUser.id);
+            await fetch(`users/${id}`, {
+                method: 'DELETE'
+            });
             closeModal();
         }
+
+        onUserDeleted();
     };
 
     return (
@@ -92,7 +97,7 @@ export default function UserList({ users, onUserClick }) {
                             <p>Are you sure you want to delete <b>{selectedUser?.name}</b>?</p>
                             <div style={{ marginTop: 24, display: 'flex', gap: 12 }}>
                                 <button
-                                    onClick={handleDelete}
+                                    onClick={() => handleDelete(selectedUser?.id)}
                                     style={{
                                         background: '#ef4444',
                                         color: '#fff',

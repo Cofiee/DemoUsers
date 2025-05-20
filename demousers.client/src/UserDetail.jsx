@@ -1,31 +1,42 @@
 import React, { useState } from 'react';
 
-export default function UserDetail({ user, onBack, onUpdate }) {
+export default function UserDetail({ user, onBack }) {
     const [editMode, setEditMode] = useState(false);
     const [formData, setFormData] = useState({ name: user.name, email: user.email });
     const [loading, setLoading] = useState(false);
+    const [error, setError] = useState(null);
 
-    const handleChange = (e) => {
+    function handleChange(e) {
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
 
-    const handleEdit = () => {
+    function handleEdit() {
         setFormData({ name: user.name, email: user.email });
         setEditMode(true);
+        setError(null);
     };
 
-    const handleCancel = () => {
+    function handleCancel() {
         setFormData({ name: user.name, email: user.email });
         setEditMode(false);
+        setError(null);
     };
 
-    const handleSubmit = async (e) => {
+    async function handleSubmit(e) {
         e.preventDefault();
-        setLoading(true);
-        if (onUpdate) {
-            await onUpdate(formData);
-        }
         setEditMode(false);
+        setLoading(true);
+        setError(null);
+        
+        const res = await fetch(`users/${user.id}`, {
+            method: 'PATCH',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ ...formData, image: user.image })
+        });
+        if (!res.ok) {
+            setFormData({ name: user.name, email: user.email });
+            setError('Failed to save changes.');
+        }
         setLoading(false);
     };
 
@@ -127,6 +138,11 @@ export default function UserDetail({ user, onBack, onUpdate }) {
                             }}
                         />
                     </div>
+                    {error && (
+                        <div style={{ color: '#f04747', marginBottom: 12 }}>
+                            {error}
+                        </div>
+                    )}
                         {!editMode ? (
                             <button
                                 type="button"

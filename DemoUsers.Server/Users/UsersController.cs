@@ -16,11 +16,6 @@ namespace DemoUsers.Server.Users
     {
         readonly IMediator _mediator;
 
-        private static readonly string[] Summaries = new[]
-        {
-            "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-        };
-
         public UsersController(IMediator mediator)
         {
             _mediator = mediator;
@@ -50,10 +45,7 @@ namespace DemoUsers.Server.Users
         [HttpPatch("{id:int}")]
         public async Task<IActionResult> UpdateUser(int id, [FromBody] User user)
         {
-            if (id != user.Id)
-            {
-                return BadRequest();
-            }
+            user.Id = id;
             await _mediator.Send(new EditUserCommand(user));
             return NoContent();
         }

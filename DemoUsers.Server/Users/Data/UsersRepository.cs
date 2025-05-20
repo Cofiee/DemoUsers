@@ -1,4 +1,10 @@
-﻿using AutoMapper;
+﻿/* W data acces layer od razu używam abstrakcji ponieważ,
+ * jakiekolwiek zmiany tehchnologiczne są najbardziej newralgiczne na poziomie bazy danych
+ * Zmiana np z SQL na Mongo albo Influx etc będzie wyjątkowo problematyczna,
+ * kiedy zależności bazodanowe wyjdą poza repozytoria.
+ */
+
+using AutoMapper;
 using DemoUsers.Server.Users.Dtos;
 using Microsoft.EntityFrameworkCore;
 

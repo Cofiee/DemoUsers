@@ -1,11 +1,12 @@
 ﻿using DemoUsers.Server.Users.Data;
 using DemoUsers.Server.Users.Dtos;
+using DemoUsers.Server.Users.Features.DeleteUser;
 using MediatR;
 
 namespace DemoUsers.Server.Users.Features.EditUser
 {
     public record EditUserCommand(User User) : IRequest<bool>;
-    internal class EditUserCommandHandler
+    internal class EditUserCommandHandler : IRequestHandler<EditUserCommand, bool>
     {
         readonly ILogger _logger;
         readonly IUsersRepository _usersRepository;
