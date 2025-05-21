@@ -47,9 +47,14 @@ export default defineConfig({
     },
     server: {
         proxy: {
-            '^/users': {
+            '^/api/v1.0/users': {
                 target,
                 secure: false
+            },
+            '^/users': {
+                target,
+                secure: false,
+                rewrite: (path) => path.replace(/^\/users/, '/api/v1.0/users/')
             }
         },
         port: parseInt(env.DEV_SERVER_PORT || '54272'),

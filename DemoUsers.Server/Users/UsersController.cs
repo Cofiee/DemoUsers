@@ -8,10 +8,13 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace DemoUsers.Server.Users
 {
-    //[ApiVersion("1.0")]
-    //[Route("/api/v{version:apiVersion}/[controller]")]
+    /* Korzystam z wersjonowanego api, przyszłościowo
+     * w pliku vite.config.js react mapuje ścieżki '/users' na '/api/v1.0/users'
+     * Dzięki temu komponenty frontendu nie wiedzą do której wersji się odwołują
+     */
+    [ApiVersion("1.0")]
+    [Route("/api/v{version:apiVersion}/[controller]")]
     [ApiController]
-    [Route("[controller]")]
     public class UsersController : ControllerBase
     {
         readonly IMediator _mediator;
