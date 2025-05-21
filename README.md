@@ -11,6 +11,19 @@ Aplikacja realizuje wszystkie podstawowe za³o¿enia
 
 Dodatkowe komentarze dot decyzji implementacyjnych s¹ umieszczone w kodzie.
 
+Wyjaœnienie w sprawie braku uploadu obrazków base64
+Podszed³bym do tego tak, ¿e awatar dodawany by³by przez modal w którym by³y by dwa pola
+jedno dla url drugie dla uploadu pliku (z limitami rozmiaru etc).
+Gdy jedno zosta³oby wype³nione to drugie zosta³oby ustawione na read only.
+Plik np .jpg zakodowa³bym w base64
+
+Nastêpnie skorzysta³bym z strumienia do odbioru base64
+https://learn.microsoft.com/en-us/aspnet/core/mvc/models/file-uploads?view=aspnetcore-9.0#upload-large-files-with-streaming
+i przes³a³ bezpoœrednio do jakiegoœ blob storage i url do tego awatara zapisa³ w encji u¿ytkownika.
+W przypadku url nast¹pi³aby próba pobrania pliku do blob storage i url do bloba zapisany w encji u¿ytkownika.
+
+Frontend po prostu dostaje url do obrazka i zaci¹ga go z blob storage, zamiast z internetu.
+
 ## Uruchomienie aplikacji
 
 ## Wymagania wstêpne
