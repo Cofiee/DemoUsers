@@ -1,4 +1,8 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿/* Używam dbcontextu in memory, bo działa ad hoc
+ * Można po prostu zrobić jeszcze prościej przez wykorzystanie zwykłego słownika etc
+ */
+
+using Microsoft.EntityFrameworkCore;
 
 namespace DemoUsers.Server.Users.Data
 {

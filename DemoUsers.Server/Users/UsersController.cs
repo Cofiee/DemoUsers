@@ -32,6 +32,9 @@ namespace DemoUsers.Server.Users
         public async Task<IActionResult> GetUser(int id)
         {
             var user = await _mediator.Send(new GetUserDetailsQuery(id));
+            if (user == null)
+                return BadRequest("User not found.");
+
             return Ok(user);
         }
 
@@ -39,7 +42,10 @@ namespace DemoUsers.Server.Users
         public async Task<IActionResult> CreateUser([FromBody] User user)
         {
             var userId = await _mediator.Send(new CreateUserCommand(user));
-            return CreatedAtAction(nameof(GetUser), new { id = userId }, null);
+            if (userId == 0)
+                return StatusCode(StatusCodes.Status500InternalServerError, "User not created.");
+
+            return Created();
         }
 
         [HttpPatch("{id:int}")]

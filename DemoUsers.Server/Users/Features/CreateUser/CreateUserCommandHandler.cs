@@ -17,8 +17,26 @@ namespace DemoUsers.Server.Users.Features.Create
             _usersRepository = usersRepository;
         }
 
-        public async Task<int> Handle(CreateUserCommand command, CancellationToken cancellationToken) => 
-            await _usersRepository.CreateUserAsync(command.User, cancellationToken);
+        public async Task<int> Handle(CreateUserCommand command, CancellationToken cancellationToken)
+        {
+            _logger.LogInformation($"[{nameof(CreateUserCommandHandler)}] creating user: {command.User.Name}, email: {command.User.Email}");
+
+            try
+            {
+                var userId = await _usersRepository.CreateUserAsync(command.User, cancellationToken);
+                if (userId == 0)
+                    _logger.LogWarning($"[{nameof(CreateUserCommandHandler)}] user not created: {command.User.Name}, email: {command.User.Email}");
+                else
+                    _logger.LogInformation($"[{nameof(CreateUserCommandHandler)}] user created with Id: {userId}");
+
+                return userId;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, $"[{nameof(CreateUserCommandHandler)}] Error occurred while creating user: {command.User.Name}, email: {command.User.Email}");
+                throw;
+            }
+        }
     }
 
 }

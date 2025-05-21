@@ -50,11 +50,22 @@ namespace DemoUsers.Server
                 options.AssumeDefaultVersionWhenUnspecified = true;
                 options.ReportApiVersions = true;
             });
+
+            // Czysty mediator, z lokalnymi handlerami
+            // bez ¿adnych message queue topiców etc apka jest za ma³a
             builder.Services.AddMediatR(cfg =>
             {
                 cfg.RegisterServicesFromAssemblyContaining<Program>();
             });
+
+            // Automapper rejestruje siê sam, je¿eli chce siê stworzyæ modu³owe wczytywanie z wielu projektów
+            // To da siê zrobiæ globalnie dostepne IAutomapperConfigurationExpression do którego zostan¹ dodane profile
+            // i zainicjalizowaæ automapper po wczytaniu modu³ów.
             builder.Services.AddAutoMapper(Assembly.GetExecutingAssembly());
+
+            // Rejestracja "modu³u" z logik¹ dla funkcjonalnoœci u¿ytkowników.
+            // Sam modu³ ³atwo mo¿na wyci¹gn¹æ do osobnej dllki i wczytaæ i zarejestrowaæ
+            // assembly resolverem
             builder.Services.AddUsersFeature();
             
             var app = builder.Build();

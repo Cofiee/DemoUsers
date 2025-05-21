@@ -47,7 +47,7 @@ namespace DemoUsers.Server.Users.Data
             return true;
         }
 
-        public async Task<User> GetUserAsync(int id, CancellationToken cancellationToken)
+        public async Task<User?> GetUserAsync(int id, CancellationToken cancellationToken)
         {
             var user = await _dbContext.Users.AsNoTracking()
                 .FirstOrDefaultAsync(x => x.Id == id, cancellationToken); 

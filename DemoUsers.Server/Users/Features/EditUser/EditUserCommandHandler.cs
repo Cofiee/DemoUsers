@@ -1,6 +1,5 @@
 ﻿using DemoUsers.Server.Users.Data;
 using DemoUsers.Server.Users.Dtos;
-using DemoUsers.Server.Users.Features.DeleteUser;
 using MediatR;
 
 namespace DemoUsers.Server.Users.Features.EditUser
@@ -19,7 +18,29 @@ namespace DemoUsers.Server.Users.Features.EditUser
 
         public async Task<bool> Handle(EditUserCommand command, CancellationToken cancellationToken)
         {
-            return await _usersRepository.UpdateUserAsync(command.User, cancellationToken);
+            _logger.LogInformation($"[{nameof(EditUserCommandHandler)}] editing user: {command.User.Id}");
+            try
+            {
+                var user = await _usersRepository.GetUserAsync(command.User.Id, cancellationToken);
+                if (user == null)
+                {
+                    _logger.LogWarning($"[{nameof(EditUserCommandHandler)}] user not found: {command.User.Id}");
+                    return false;
+                }
+
+                var result = await _usersRepository.UpdateUserAsync(command.User, cancellationToken);
+                if (result)
+                    _logger.LogInformation($"[{nameof(EditUserCommandHandler)}] user edited: {command.User.Id}");
+                else
+                    _logger.LogWarning($"[{nameof(EditUserCommandHandler)}] user not edited: {command.User.Id}");
+
+                return result;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, $"[{nameof(EditUserCommandHandler)}] Error occurred while editing user: {command.User.Id}");
+                throw;
+            }
         }
     }
 }

@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using DemoUsers.Server.Users.Data;
+﻿using DemoUsers.Server.Users.Data;
 using Microsoft.EntityFrameworkCore;
 
 namespace DemoUsers.Server.Users
